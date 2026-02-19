@@ -1,7 +1,24 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+  env: {
+    BFF_PATH: process.env.BFF_PATH
+  },
+  logging: {
+    fetches: {
+      fullUrl: true
+    }
+  },
+  rewrites
+}
 
-export default nextConfig;
+async function rewrites() {
+  return [
+    {
+      source: `${process.env.BFF_PATH}/:path*`,
+      destination: `${process.env.API_ROUTE}/:path*`
+    }
+  ]
+}
+
+export default nextConfig
