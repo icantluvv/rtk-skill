@@ -62,24 +62,5 @@ export const MOCK_VIDEOS: VideoCardProps[] = [
     imageAlt: "Видео 6",
     title: "Шестое видео2",
     description: "Шестой элемент для полного ряда из трёх карточек."
-  },
-  {
-    imageSrc: "/",
-
-    imageAlt: "Видео 4",
-    title: "Четвёртое видео1",
-    description: "Четвёртый элемент для проверки переноса строки грида."
-  },
-  {
-    imageSrc: "/",
-    imageAlt: "Видео 5",
-    title: "Пятое видео1",
-    description: "Пятый элемент каталога."
-  },
-  {
-    imageSrc: "/",
-    imageAlt: "Видео 6",
-    title: "Шестое видео1",
-    description: "Шестой элемент для полного ряда из трёх карточек."
   }
 ]
