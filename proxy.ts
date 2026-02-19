@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/rutube-proxy/")) {
     const path = request.nextUrl.pathname.replace("/rutube-proxy/", "")
     const url = `https://rutube.ru/api/${path}${request.nextUrl.search}`

@@ -1,6 +1,6 @@
 import { StoreProvider } from "@/shared/store/store-provider"
-import { Footer } from "@/widgets/footer"
-import { Header } from "@/widgets/header"
+import Footer from "@/widgets/footer"
+import Header from "@/widgets/header"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
