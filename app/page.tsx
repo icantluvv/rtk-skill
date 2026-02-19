@@ -21,7 +21,7 @@ export default function Home() {
   const isFromMock = useAppSelector(selectIsFromMock)
 
   useEffect(() => {
-    dispatch(fetchVideos(12))
+    dispatch(fetchVideos({ limit: 12 }))
   }, [dispatch])
 
   return (

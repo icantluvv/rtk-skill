@@ -1,34 +1,45 @@
 "use client"
 
-import { useState } from "react"
+import { fetchVideos } from "@/features/video-search"
+import { useAppDispatch } from "@/shared/store/hooks"
+import { SubmitEvent, useState } from "react"
 
-type Region = "russia" | "kazakhstan" | "belarus"
+type Category =
+  | "tags/video/7487"
+  | "feeds/cardgroup/1554"
+  | "feeds/cardgroup/1557"
 
 type SearchFilterProps = {
-  onSearch?: (region: Region) => void
+  onSearch?: (category: Category) => void
 }
 
 export function SearchFilter({ onSearch }: SearchFilterProps) {
-  const [selectedRegion, setSelectedRegion] = useState<Region>("russia")
+  const dispatch = useAppDispatch()
+  const [selected, setSelected] = useState<Category>("feeds/cardgroup/1554")
 
-  const handleSearch = () => {
-    onSearch?.(selectedRegion)
+  const handleSearch = (e: SubmitEvent<HTMLFormElement>) => {
+    e?.preventDefault()
+    onSearch?.(selected)
+    dispatch(fetchVideos({ category: selected }))
   }
 
   return (
-    <div className="flex w-full gap-4 items-center justify-end">
+    <form
+      onSubmit={handleSearch}
+      className="flex w-full gap-4 items-center justify-end"
+    >
       <select
-        value={selectedRegion}
-        onChange={(e) => setSelectedRegion(e.target.value as Region)}
+        value={selected}
+        onChange={(e) => setSelected(e.target.value as Category)}
         className="px-4 py-2 border rounded-lg min-w-70 bg-gray-200 min-h-12"
       >
-        <option value="russia">Россия</option>
-        <option value="kazakhstan">Казахстан</option>
-        <option value="belarus">Беларусь</option>
+        <option value="feeds/cardgroup/1554">Сериалы</option>
+        <option value="feeds/cardgroup/1557">Детям</option>
+        <option value="tags/video/7487">Кино</option>
       </select>
 
       <button
-        onClick={handleSearch}
+        type="submit"
         className="flex min-w-40 items-center justify-center gap-3 px-6 min-h-12 py-2 duration-100 cursor-pointer bg-red-700  active:bg-red-800 text-white rounded-lg transition-colors"
       >
         <svg
@@ -47,6 +58,6 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
         </svg>
         Искать
       </button>
-    </div>
+    </form>
   )
 }

@@ -38,16 +38,10 @@ export const VideoCatalog = ({
           </p>
         </div>
       )}
-      <div className="grid grid-cols-3 gap-4 gap-y-6">
-        {videos.map((video, index) => (
-          <VideoCard
-            key={`${video.title}-${index}`}
-            imageSrc={video.imageSrc}
-            imageAlt={video.imageAlt}
-            title={video.title}
-            description={video.description}
-          />
-        ))}
+      <div className="grid grid-cols-3 gap-4 gap-y-10">
+        {videos.map((video, index) => {
+          return <VideoCard key={`${video.title}-${index}`} {...video} />
+        })}
       </div>
     </div>
   )

@@ -2,6 +2,7 @@ import { VideoCardProps } from "@/entities/video-card"
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { fetchVideosFromApi } from "../api/fetch-videos"
 import { MOCK_VIDEOS } from "../api/mock"
+import { VideoSearchParams } from "../api/types"
 
 // TYPES
 export type Video = VideoCardProps
@@ -11,6 +12,8 @@ export type VideoSearchState = {
   isLoading: boolean
   error: string | null
   isFromMock: boolean
+  currentPage: number
+  hasNext: boolean
 }
 
 // INITIAL STATE
@@ -18,22 +21,40 @@ const initialState: VideoSearchState = {
   videos: [],
   isLoading: false,
   error: null,
-  isFromMock: false
+  isFromMock: false,
+  currentPage: 1,
+  hasNext: false
 }
 
 // ASYNC THUNKS
 export const fetchVideos = createAsyncThunk(
   "videoSearch/fetchVideos",
-  async (limit: number = 12) => {
+  async (params: VideoSearchParams = {}) => {
     try {
-      const videos = await fetchVideosFromApi(limit)
-      return { videos, isFromMock: false }
+      const result = await fetchVideosFromApi(params)
+      return {
+        videos: result.videos,
+        isFromMock: false,
+        hasNext: result.hasNext,
+        currentPage: result.currentPage
+      }
     } catch (error) {
-      console.warn(
-        "Ошибка при загрузке видео с API, используем mock данные:",
-        error
-      )
-      return { videos: MOCK_VIDEOS.slice(0, limit), isFromMock: true }
+      console.error(error)
+
+      const limit = params.limit || 12
+      const page = params.page || 1
+      const startIndex = (page - 1) * limit
+      const endIndex = startIndex + limit
+
+      const paginatedVideos = MOCK_VIDEOS.slice(startIndex, endIndex)
+      const hasNext = endIndex < MOCK_VIDEOS.length
+
+      return {
+        videos: paginatedVideos,
+        isFromMock: true,
+        hasNext,
+        currentPage: page
+      }
     }
   }
 )
@@ -47,6 +68,8 @@ const videoSearchSlice = createSlice({
       state.videos = []
       state.error = null
       state.isFromMock = false
+      state.currentPage = 1
+      state.hasNext = false
     },
     clearError: (state) => {
       state.error = null
@@ -62,6 +85,8 @@ const videoSearchSlice = createSlice({
         state.isLoading = false
         state.videos = action.payload.videos
         state.isFromMock = action.payload.isFromMock
+        state.hasNext = action.payload.hasNext
+        state.currentPage = action.payload.currentPage
         state.error = null
       })
       .addCase(fetchVideos.rejected, (state, action) => {
@@ -86,6 +111,10 @@ export const selectIsFromMock = (state: { videoSearch: VideoSearchState }) =>
   state.videoSearch.isFromMock
 export const selectVideosCount = (state: { videoSearch: VideoSearchState }) =>
   state.videoSearch.videos.length
+export const selectCurrentPage = (state: { videoSearch: VideoSearchState }) =>
+  state.videoSearch.currentPage
+export const selectHasNext = (state: { videoSearch: VideoSearchState }) =>
+  state.videoSearch.hasNext
 
 // DEFAULT EXPORT REDUCER
 export default videoSearchSlice.reducer

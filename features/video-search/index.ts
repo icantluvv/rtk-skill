@@ -7,6 +7,13 @@ export {
   selectIsLoading,
   selectError,
   selectIsFromMock,
-  selectVideosCount
+  selectVideosCount,
+  selectCurrentPage,
+  selectHasNext
 } from "./model/video-search-slice"
 export type { VideoSearchState, Video } from "./model/video-search-slice"
+export type {
+  VideoSearchParams,
+  RutubeVideoResponse,
+  RutubeSearchResponse
+} from "./api/types"
