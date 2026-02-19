@@ -1,1 +1,1 @@
-export { VideoCard, type VideoCardProps } from "./VideoCard";
+export { VideoCard, type VideoCardProps } from "./video-card";

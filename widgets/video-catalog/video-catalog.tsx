@@ -1,5 +1,5 @@
-import { MOCK_VIDEOS } from "@/shared/api/video-catalog"
-import { VideoCard } from "../video-card"
+import { MOCK_VIDEOS } from "@/features/video-search/api/mock"
+import { VideoCard } from "../../entities/video-card"
 
 export const VideoCatalog = () => {
   return (
