@@ -2,26 +2,35 @@
 
 import {
   fetchVideos,
+  fetchMoreVideos,
   selectError,
   selectIsFromMock,
   selectIsLoading,
-  selectVideos
+  selectIsLoadingMore,
+  selectVideos,
+  selectHasNext
 } from "@/features/video-search"
 import { SearchFilter } from "@/features/video-search/ui/search-filter"
 import { useAppDispatch, useAppSelector } from "@/shared/store/hooks"
 import SectionWrapper from "@/widgets/section-wrapper"
 import { VideoCatalog } from "@/widgets/video-catalog"
-import { useEffect } from "react"
+import { useCallback, useEffect } from "react"
 
 export default function Home() {
   const dispatch = useAppDispatch()
   const videos = useAppSelector(selectVideos)
   const isLoading = useAppSelector(selectIsLoading)
+  const isLoadingMore = useAppSelector(selectIsLoadingMore)
   const error = useAppSelector(selectError)
   const isFromMock = useAppSelector(selectIsFromMock)
+  const hasNext = useAppSelector(selectHasNext)
 
   useEffect(() => {
     dispatch(fetchVideos({ limit: 12 }))
+  }, [dispatch])
+
+  const handleLoadMore = useCallback(() => {
+    dispatch(fetchMoreVideos())
   }, [dispatch])
 
   return (
@@ -31,8 +40,11 @@ export default function Home() {
         <VideoCatalog
           videos={videos}
           isLoading={isLoading}
+          isLoadingMore={isLoadingMore}
           error={error}
           isFromMock={isFromMock}
+          hasNext={hasNext}
+          onLoadMore={handleLoadMore}
         />
       </SectionWrapper>
     </main>

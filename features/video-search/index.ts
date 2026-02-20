@@ -1,10 +1,12 @@
 export { default as videoSearchReducer } from "./model/video-search-slice"
 export {
   fetchVideos,
+  fetchMoreVideos,
   resetVideos,
   clearError,
   selectVideos,
   selectIsLoading,
+  selectIsLoadingMore,
   selectError,
   selectIsFromMock,
   selectVideosCount,

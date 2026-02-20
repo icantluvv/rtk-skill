@@ -3,9 +3,17 @@ import { Video } from "../model/video-search-slice"
 import { mapRutubeVideosToVideos } from "./mappers"
 import { RutubeSearchResponse, VideoSearchParams } from "./types"
 
+const RUTUBE_API_BASE = "https://rutube.ru/api/"
+
+type FetchVideosResult = {
+  videos: Video[]
+  next: string | null
+  currentPage: number
+}
+
 export const fetchVideosFromApi = async (
   params: VideoSearchParams
-): Promise<{ videos: Video[]; hasNext: boolean; currentPage: number }> => {
+): Promise<FetchVideosResult> => {
   const {
     category = "feeds/cardgroup/1554",
     limit = 12,
@@ -27,7 +35,20 @@ export const fetchVideosFromApi = async (
 
   return {
     videos: mapRutubeVideosToVideos(response.data.results),
-    hasNext: response.data.has_next,
+    next: response.data.next,
+    currentPage: response.data.page
+  }
+}
+
+export const fetchVideosFromNextUrl = async (
+  nextUrl: string
+): Promise<FetchVideosResult> => {
+  const proxyPath = nextUrl.replace(RUTUBE_API_BASE, "")
+  const response = await rutubeInstance.get<RutubeSearchResponse>(proxyPath)
+
+  return {
+    videos: mapRutubeVideosToVideos(response.data.results),
+    next: response.data.next,
     currentPage: response.data.page
   }
 }
