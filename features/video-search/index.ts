@@ -1,21 +1,8 @@
-export { default as videoSearchReducer } from "./model/video-search-slice"
-export {
-  fetchVideos,
-  fetchMoreVideos,
-  resetVideos,
-  clearError,
-  selectVideos,
-  selectIsLoading,
-  selectIsLoadingMore,
-  selectError,
-  selectIsFromMock,
-  selectVideosCount,
-  selectCurrentPage,
-  selectHasNext
-} from "./model/video-search-slice"
-export type { VideoSearchState, Video } from "./model/video-search-slice"
+export { videoSearchApi, useGetVideosQuery } from "./api/video-search-api"
 export type {
-  VideoSearchParams,
+  Video,
+  GetVideosArgs,
+  GetVideosResult,
   RutubeVideoResponse,
   RutubeSearchResponse
 } from "./api/types"

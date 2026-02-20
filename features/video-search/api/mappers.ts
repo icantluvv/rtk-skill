@@ -1,5 +1,4 @@
-import { Video } from "../model/video-search-slice"
-import { RutubeVideoResponse } from "./types"
+import { RutubeVideoResponse, Video } from "./types"
 
 export const mapRutubeVideoToVideo = (
   rutubeVideo: RutubeVideoResponse

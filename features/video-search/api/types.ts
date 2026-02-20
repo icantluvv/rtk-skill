@@ -1,3 +1,7 @@
+import { VideoCardProps } from "@/entities/video-card"
+
+export type Video = VideoCardProps
+
 export type RutubeContentObject = {
   id: number
   name: string
@@ -6,7 +10,6 @@ export type RutubeContentObject = {
   video_count?: number
   age?: string
   duration?: number
-  // Add other fields from the JSON example if needed
   type?: {
     id: number
     name: string
@@ -36,11 +39,15 @@ export type RutubeSearchResponse = {
   results: RutubeVideoResponse[]
 }
 
-export type VideoSearchParams = {
-  category?: string
-  limit?: number
+export type GetVideosArgs = {
+  category: string
   page?: number
-  noTitle?: boolean
-  posters?: boolean
-  show_hidden_videos?: boolean
+  limit?: number
+}
+
+export type GetVideosResult = {
+  videos: Video[]
+  next: string | null
+  page: number
+  isFromMock: boolean
 }

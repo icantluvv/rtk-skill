@@ -2,7 +2,7 @@
 
 import { useMemo } from "react"
 import { Provider } from "react-redux"
-import { makeStore } from "./index"
+import { makeStore } from "../store"
 
 type StoreProviderProps = {
   children: React.ReactNode

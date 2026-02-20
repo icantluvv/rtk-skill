@@ -1,4 +1,4 @@
-import { StoreProvider } from "@/shared/store/store-provider"
+import { StoreProvider } from "./providers/store-provider"
 import Footer from "@/widgets/footer"
 import Header from "@/widgets/header"
 import type { Metadata } from "next"

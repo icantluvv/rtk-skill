@@ -4,7 +4,7 @@ import { useCallback, useRef } from "react"
 type VideoCatalogProps = {
   videos: VideoCardProps[]
   isLoading: boolean
-  isLoadingMore: boolean
+  isFetching: boolean
   error: string | null
   isFromMock: boolean
   hasNext: boolean
@@ -16,7 +16,7 @@ const LOAD_MORE_THRESHOLD = 3
 export const VideoCatalog = ({
   videos,
   isLoading,
-  isLoadingMore,
+  isFetching,
   error,
   isFromMock,
   hasNext,
@@ -27,7 +27,7 @@ export const VideoCatalog = ({
   const sentinelRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (observerRef.current) observerRef.current.disconnect()
-      if (!node || !hasNext || isLoadingMore) return
+      if (!node || !hasNext || isFetching) return
 
       observerRef.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
@@ -36,7 +36,7 @@ export const VideoCatalog = ({
       })
       observerRef.current.observe(node)
     },
-    [hasNext, isLoadingMore, onLoadMore]
+    [hasNext, isFetching, onLoadMore]
   )
 
   if (isLoading) {
@@ -76,7 +76,7 @@ export const VideoCatalog = ({
           </div>
         ))}
       </div>
-      {isLoadingMore && (
+      {isFetching && !isLoading && (
         <div className="flex items-center justify-center py-6">
           <p className="text-white text-lg">Загрузка...</p>
         </div>

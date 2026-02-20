@@ -1,14 +1,15 @@
-import { videoSearchReducer } from "@/features/video-search"
+import { videoSearchApi } from "@/features/video-search"
 import { configureStore } from "@reduxjs/toolkit"
 
-export const makeStore = () => {
-  return configureStore({
+export const makeStore = () =>
+  configureStore({
     reducer: {
-      videoSearch: videoSearchReducer
+      [videoSearchApi.reducerPath]: videoSearchApi.reducer
     },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(videoSearchApi.middleware),
     devTools: process.env.NODE_ENV !== "production"
   })
-}
 
 export type AppStore = ReturnType<typeof makeStore>
 export type RootState = ReturnType<AppStore["getState"]>

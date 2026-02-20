@@ -1,8 +1,6 @@
 "use client"
 
-import { fetchVideos } from "@/features/video-search"
-import { useAppDispatch } from "@/shared/store/hooks"
-import { SubmitEvent, useState } from "react"
+import { useState, type FormEvent } from "react"
 
 type Category =
   | "tags/video/7487"
@@ -10,17 +8,15 @@ type Category =
   | "feeds/cardgroup/1557"
 
 type SearchFilterProps = {
-  onSearch?: (category: Category) => void
+  onSearch: (category: string) => void
 }
 
 export function SearchFilter({ onSearch }: SearchFilterProps) {
-  const dispatch = useAppDispatch()
   const [selected, setSelected] = useState<Category>("feeds/cardgroup/1554")
 
-  const handleSearch = (e: SubmitEvent<HTMLFormElement>) => {
-    e?.preventDefault()
-    onSearch?.(selected)
-    dispatch(fetchVideos({ category: selected }))
+  const handleSearch = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    onSearch(selected)
   }
 
   return (
