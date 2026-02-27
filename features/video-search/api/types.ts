@@ -2,6 +2,11 @@ import { VideoCardProps } from "@/entities/video-card"
 
 export type Video = VideoCardProps
 
+export type Category =
+  | "tags/video/7487"
+  | "feeds/cardgroup/1554"
+  | "feeds/cardgroup/1557"
+  
 export type RutubeContentObject = {
   id: number
   name: string

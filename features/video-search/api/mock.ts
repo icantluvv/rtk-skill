@@ -26,53 +26,5 @@ export const MOCK_VIDEOS: VideoCardProps[] = [
     title: "тест",
     description: "тест",
     age: "16+"
-  },
-  {
-    id: "e30edf24ea097b45d0d469fac449478c",
-    imageSrc: "/",
-    imageAlt: "тест",
-    title: "тест",
-    description: "тест",
-    age: "0+"
-  },
-  {
-    id: "mock-1",
-    imageSrc: "/",
-    imageAlt: "тест",
-    title: "тест",
-    description: "тест",
-    age: "12+"
-  },
-  {
-    id: "mock-2",
-    imageSrc: "/",
-    imageAlt: "тест",
-    title: "тест",
-    description: "тест",
-    age: "16+"
-  },
-  {
-    id: "mock-3",
-    imageSrc: "/",
-    imageAlt: "тест",
-    title: "тест",
-    description: "тест",
-    age: "16+"
-  },
-  {
-    id: "mock-4",
-    imageSrc: "/",
-    imageAlt: "тест",
-    title: "тест",
-    description: "тест",
-    age: "12+"
-  },
-  {
-    id: "mock-5",
-    imageSrc: "/",
-    imageAlt: "тест",
-    title: "тест",
-    description: "тест",
-    age: "12+"
   }
 ]

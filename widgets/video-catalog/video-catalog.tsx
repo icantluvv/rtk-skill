@@ -1,5 +1,8 @@
+"use client"
+
 import { VideoCard, VideoCardProps } from "@/entities/video-card"
-import { useCallback, useRef } from "react"
+import { useVideoSearch } from "@/features/video-search"
+import { memo, useCallback, useRef } from "react"
 
 type VideoCatalogProps = {
   videos: VideoCardProps[]
@@ -8,20 +11,19 @@ type VideoCatalogProps = {
   error: string | null
   isFromMock: boolean
   hasNext: boolean
-  onLoadMore: () => void
 }
 
 const LOAD_MORE_THRESHOLD = 3
 
-export const VideoCatalog = ({
+function VideoCatalogComponent({
   videos,
   isLoading,
   isFetching,
   error,
   isFromMock,
-  hasNext,
-  onLoadMore
-}: VideoCatalogProps) => {
+  hasNext
+}: VideoCatalogProps) {
+  const { loadNextPage } = useVideoSearch()
   const observerRef = useRef<IntersectionObserver | null>(null)
 
   const sentinelRef = useCallback(
@@ -31,13 +33,15 @@ export const VideoCatalog = ({
 
       observerRef.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
-          onLoadMore()
+          loadNextPage()
         }
       })
       observerRef.current.observe(node)
     },
-    [hasNext, isFetching, onLoadMore]
+    [hasNext, isFetching, loadNextPage]
   )
+
+  const sentinelIndex = videos.length - LOAD_MORE_THRESHOLD
 
   if (isLoading) {
     return (
@@ -54,8 +58,6 @@ export const VideoCatalog = ({
       </div>
     )
   }
-
-  const sentinelIndex = videos.length - LOAD_MORE_THRESHOLD
 
   return (
     <div className="flex flex-col gap-6 w-full">
@@ -84,3 +86,5 @@ export const VideoCatalog = ({
     </div>
   )
 }
+
+export const VideoCatalog = memo(VideoCatalogComponent)

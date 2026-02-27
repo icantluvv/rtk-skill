@@ -1,22 +1,14 @@
-"use client"
+import { useVideoSearch, type Category } from "@/features/video-search"
+import { memo, type SubmitEvent } from "react"
 
-import { useState, type FormEvent } from "react"
+function SearchFilterComponent() {
+  const { category, changeCategory } = useVideoSearch()
 
-type Category =
-  | "tags/video/7487"
-  | "feeds/cardgroup/1554"
-  | "feeds/cardgroup/1557"
-
-type SearchFilterProps = {
-  onSearch: (category: string) => void
-}
-
-export function SearchFilter({ onSearch }: SearchFilterProps) {
-  const [selected, setSelected] = useState<Category>("feeds/cardgroup/1554")
-
-  const handleSearch = (e: FormEvent<HTMLFormElement>) => {
+  const handleSearch = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
-    onSearch(selected)
+    const formData = new FormData(e.currentTarget)
+    const selected = formData.get("category") as Category
+    changeCategory(selected)
   }
 
   return (
@@ -25,8 +17,9 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
       className="flex w-full gap-4 items-center justify-end"
     >
       <select
-        value={selected}
-        onChange={(e) => setSelected(e.target.value as Category)}
+        name="category"
+        value={category}
+        onChange={(e) => changeCategory(e.target.value as Category)}
         className="px-4 py-2 border rounded-lg min-w-70 bg-gray-200 min-h-12"
       >
         <option value="feeds/cardgroup/1554">Сериалы</option>
@@ -57,3 +50,5 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
     </form>
   )
 }
+
+export const SearchFilter = memo(SearchFilterComponent)

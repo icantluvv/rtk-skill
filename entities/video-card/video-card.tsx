@@ -1,5 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
+import { memo } from "react"
 
 export type VideoCardProps = {
   id: string
@@ -11,7 +12,7 @@ export type VideoCardProps = {
   videoCount?: number
 }
 
-export function VideoCard({
+function VideoCardComponent({
   id,
   imageSrc = "",
   imageAlt = "",
@@ -54,3 +55,5 @@ export function VideoCard({
     </Link>
   )
 }
+
+export const VideoCard = memo(VideoCardComponent)

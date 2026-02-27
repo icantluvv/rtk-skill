@@ -1,16 +1,26 @@
+import { isServer } from "@/shared/lib/is-server"
+import { configureStore } from "@reduxjs/toolkit"
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-import { mapRutubeVideosToVideos } from "./mappers"
-import { MOCK_VIDEOS } from "./mock"
-import {
+import { mapRutubeVideosToVideos } from "../api/mappers"
+import { MOCK_VIDEOS } from "../api/mock"
+import type {
   GetVideosArgs,
   GetVideosResult,
-  RutubeSearchResponse
-} from "./types"
+  RutubeSearchResponse,
+  Video
+} from "../api/types"
+
+type VideoSearchPreloadedState = {
+  [videoSearchApi.reducerPath]: ReturnType<typeof videoSearchApi.reducer>
+}
+
+const RUTUBE_API_BASE = "https://rutube.ru/api/"
+const RUTUBE_PROXY_PATH = process.env.RUTUBE_BFF_PATH
 
 export const videoSearchApi = createApi({
   reducerPath: "videoSearchApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.RUTUBE_BFF_PATH
+    baseUrl: isServer() ? RUTUBE_API_BASE : RUTUBE_PROXY_PATH
   }),
   endpoints: (build) => ({
     getVideos: build.query<GetVideosResult, GetVideosArgs>({
@@ -68,8 +78,28 @@ export const videoSearchApi = createApi({
       },
       forceRefetch: ({ currentArg, previousArg }) =>
         currentArg?.page !== previousArg?.page
+    }),
+    getVideoById: build.query<Video, string>({
+      query: (id) => ({ url: `/videos/${id}` })
     })
   })
 })
 
-export const { useGetVideosQuery } = videoSearchApi
+export const { useGetVideosQuery, useGetVideoByIdQuery } = videoSearchApi
+
+const reducer = { [videoSearchApi.reducerPath]: videoSearchApi.reducer }
+
+export const makeVideoSearchStore = (
+  preloadedState?: VideoSearchPreloadedState
+) =>
+  configureStore({
+    reducer,
+    preloadedState,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(videoSearchApi.middleware),
+    devTools: process.env.NODE_ENV !== "production"
+  })
+
+export type VideoSearchStore = ReturnType<typeof makeVideoSearchStore>
+export type VideoSearchState = ReturnType<VideoSearchStore["getState"]>
+export type VideoSearchDispatch = VideoSearchStore["dispatch"]

@@ -1,48 +1,32 @@
-"use client"
-
-import { useGetVideosQuery } from "@/features/video-search"
-import { SearchFilter } from "@/features/video-search/ui/search-filter"
+import { VideoSearchStoreProvider, prefetchVideos } from "@/features/video-search"
+import { VideoHomePage } from "@/pages/video-home"
 import SectionWrapper from "@/widgets/section-wrapper"
-import { VideoCatalog } from "@/widgets/video-catalog"
-import { useCallback, useState } from "react"
 
-const DEFAULT_CATEGORY = "feeds/cardgroup/1554"
-const PAGE_LIMIT = 12
+type HomePageProps = {
+  searchParams: Promise<{ category?: string; page?: string }>
+}
 
-export default function Home() {
-  const [category, setCategory] = useState(DEFAULT_CATEGORY)
-  const [page, setPage] = useState(1)
+export default async function Home({ searchParams }: HomePageProps) {
+  const params = await searchParams
+  const page = params.page ? Number(params.page) : undefined
 
-  const { data, isLoading, isFetching, error } = useGetVideosQuery({
-    category,
-    page,
-    limit: PAGE_LIMIT
-  })
-
-  const handleCategoryChange = useCallback((newCategory: string) => {
-    setCategory(newCategory)
-    setPage(1)
-  }, [])
-
-  const handleLoadMore = useCallback(() => {
-    if (data?.next) {
-      setPage((prev) => prev + 1)
-    }
-  }, [data?.next])
+  const {
+    preloadedState,
+    category: initialCategory,
+    page: initialPage
+  } = await prefetchVideos(params.category, page)
 
   return (
     <main className="flex min-h-screen items-center justify-center font-sans bg-black px-10 py-40">
       <SectionWrapper className="flex flex-col gap-6">
-        <SearchFilter onSearch={handleCategoryChange} />
-        <VideoCatalog
-          videos={data?.videos ?? []}
-          isLoading={isLoading}
-          isFetching={isFetching}
-          error={error ? "Произошла ошибка при загрузке видео" : null}
-          isFromMock={data?.isFromMock ?? false}
-          hasNext={!!data?.next}
-          onLoadMore={handleLoadMore}
-        />
+        <VideoSearchStoreProvider
+          key={`${initialCategory}-${initialPage}`}
+          preloadedState={preloadedState}
+          initialCategory={initialCategory}
+          initialPage={initialPage}
+        >
+          <VideoHomePage />
+        </VideoSearchStoreProvider>
       </SectionWrapper>
     </main>
   )

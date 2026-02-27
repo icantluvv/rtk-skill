@@ -1,4 +1,3 @@
-import { StoreProvider } from "./providers/store-provider"
 import Footer from "@/widgets/footer"
 import Header from "@/widgets/header"
 import type { Metadata } from "next"
@@ -30,11 +29,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <StoreProvider>
-          <Header />
-          {children}
-          <Footer />
-        </StoreProvider>
+        <Header />
+        {children}
+        <Footer />
       </body>
     </html>
   )
